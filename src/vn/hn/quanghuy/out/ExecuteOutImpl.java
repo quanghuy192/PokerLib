@@ -1,41 +1,27 @@
 package vn.hn.quanghuy.out;
 
-import java.util.List;
-
 import vn.hn.quanghuy.model.ResultStatus;
-import vn.hn.quanghuy.utils.PercentUtil;
 
 public class ExecuteOutImpl implements ExecuteOut {
 
-    private static final int STATUS_ADD = 0;
-    private static final int STATUS_ADD_ALL = 1;
-    private static final int STATUS_FOLLOW = 2;
-    private static final int STATUS_REJECT = 3;
-
     @Override
-    public int processOut(List<ResultStatus> list) {
+    public int processOut(final int percent) {
 
-        if (null != list || list.size() > 0) {
+        if (percent <= ResultStatus.ADD.getPercent()) {
 
-            int result = PercentUtil.exportRandomValue();
+            return ResultStatus.ADD.ordinal();
+        } else if (percent <= ResultStatus.ADD_ALL.getPercent()
+                && percent > ResultStatus.ADD.getPercent()) {
 
-            if (result <= list.get(STATUS_ADD).getPercent()) {
+            return ResultStatus.ADD_ALL.ordinal();
+        } else if (percent <= ResultStatus.FOLLOW.getPercent()
+                && percent > ResultStatus.ADD_ALL.getPercent()) {
 
-                return list.get(STATUS_ADD).getId();
-            } else if (result <= list.get(STATUS_ADD_ALL).getPercent()
-                    && result > list.get(STATUS_ADD).getPercent()) {
+            return ResultStatus.FOLLOW.ordinal();
+        } else {
 
-                return list.get(STATUS_ADD_ALL).getId();
-            } else if (result <= list.get(STATUS_FOLLOW).getPercent()
-                    && result > list.get(STATUS_ADD_ALL).getPercent()) {
-
-                return list.get(STATUS_FOLLOW).getId();
-            } else {
-
-                return list.get(STATUS_REJECT).getId();
-            }
+            return ResultStatus.DENY.ordinal();
         }
-        return list.get(STATUS_REJECT).getId();
 
     }
 

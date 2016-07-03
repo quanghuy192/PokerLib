@@ -1,26 +1,10 @@
 package vn.hn.quanghuy.model;
 
-public class ResultStatus {
+public enum ResultStatus {
 
-    private String type;
+    ADD, ADD_ALL, FOLLOW, DENY;
+
     private int percent;
-    private int id;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
 
     public int getPercent() {
         return percent;

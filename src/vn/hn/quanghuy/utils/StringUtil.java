@@ -4,6 +4,12 @@ public final class StringUtil {
 
     private static final String BLANK = "";
 
+    /**
+     * Date: 2016/06/19 
+     * Author: Quang Huy 
+     * Description: Private contructor, Utilities class
+     * 
+     */
     private StringUtil() {
 
     }
@@ -15,7 +21,7 @@ public final class StringUtil {
      * 
      * @param param:
      *            string params to check
-     * @return [false]: if param null or blank
+     * @return [false]: if param null or blank, another
      */
     public static boolean isEmpty(String param) {
 
