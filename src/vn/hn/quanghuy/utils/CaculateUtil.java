@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import vn.hn.quanghuy.model.Card;
+import vn.hn.quanghuy.model.TYPE;
 
 public final class CaculateUtil {
 
@@ -26,26 +27,36 @@ public final class CaculateUtil {
 	public static List<Card> getListCardSum10(List<Card> listCard) {
 
 		initExistCard();
-		
+
 		checkDiamonds369();
-		
-		while(!isFinish){
-			
+
+		while (!isFinish) {
+
 			short point = 0;
 			for (int i = 0; i < N; i++) {
-				
+
 				int position = existCard[i];
 				point += currentListCard.get(position).getValue();
 			}
-			
+
 		}
 
 		currentListCard = new ArrayList<>(listCard);
 		return currentListCard;
 	}
 
-	private static void checkDiamonds369() {
+	private static boolean checkDiamonds369() {
 
+		for (Card card : currentListCard) {
+
+			if (card.getType().equals(TYPE.DIAMONDS)) {
+
+				if (card.getValue() == 3 || card.getValue() == 6 || card.getValue() == 9) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	private static void nextCombination() {
