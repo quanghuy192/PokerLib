@@ -1,6 +1,7 @@
 package vn.hn.quanghuy.utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import vn.hn.quanghuy.model.Card;
@@ -13,7 +14,7 @@ public final class CaculateUtil {
 
 	private static boolean isFinish = false;
 
-	private static List<Card> currentListCard;
+	private static List<HashMap<Card, Boolean>> currentListCard;
 	private static short[] existCard;
 
 	/**
@@ -24,32 +25,72 @@ public final class CaculateUtil {
 	private CaculateUtil() {
 	}
 
-	public static List<Card> getListCardSum10(List<Card> listCard) {
+	public static List<HashMap<Card, Boolean>> getListCardSum10(List<Card> listCard) {
 
 		initExistCard();
+		initListCurrentCard(listCard);
 
-		checkDiamonds369();
+		if (checkDiamonds369()) {
 
-		while (!isFinish) {
+			findTheBuestPoint1();
+		} else {
+
+			findTheBuestPoint2();
+		}
+
+		return currentListCard;
+	}
+
+	private static void initListCurrentCard(List<Card> listCard) {
+
+		currentListCard = new ArrayList<>();
+		int size = listCard.size();
+		
+		HashMap<Card, Boolean> map = null;
+		
+		for (int i = 0; i < size; i++) {
+			
+			map = new HashMap<>();
+			map.put(listCard.get(i), true);
+			
+			currentListCard.add(map);
+		}
+
+	}
+
+	private static void findTheBuestPoint1() {
+		do {
 
 			short point = 0;
-			for (int i = 0; i < N; i++) {
+			for (int i = 0; i < K; i++) {
 
 				int position = existCard[i];
 				point += currentListCard.get(position).getValue();
 			}
 
-		}
+		} while (!isFinish);
 
-		currentListCard = new ArrayList<>(listCard);
-		return currentListCard;
+	}
+
+	private static void findTheBuestPoint2() {
+		do {
+
+			short point = 0;
+			for (int i = 0; i < K; i++) {
+
+				int position = existCard[i];
+				point += currentListCard.get(position).getValue();
+			}
+
+		} while (!isFinish);
+
 	}
 
 	private static boolean checkDiamonds369() {
 
-		for (Card card : currentListCard) {
+		for (int i = 0; i < N; i++) {
 
-			if (card.getType().equals(TYPE.DIAMONDS)) {
+			if (currentListCard.get(i).getType().equals(TYPE.DIAMONDS)) {
 
 				if (card.getValue() == 3 || card.getValue() == 6 || card.getValue() == 9) {
 					return true;
