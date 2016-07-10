@@ -15,6 +15,7 @@ public final class CaculateUtil {
 	private static boolean isFinish = false;
 
 	private static List<HashMap<Card, Boolean>> currentListCard;
+	private static List<Card> listOriginalCard;
 	private static short[] existCard;
 
 	/**
@@ -27,70 +28,117 @@ public final class CaculateUtil {
 
 	public static List<HashMap<Card, Boolean>> getListCardSum10(List<Card> listCard) {
 
-		initExistCard();
+		initIsChooseCard();
+		initOriginalCard(listCard);
 		initListCurrentCard(listCard);
 
 		if (checkDiamonds369()) {
 
-			findTheBuestPoint1();
+			findTheBestPoint1();
 		} else {
 
-			findTheBuestPoint2();
+			findTheBestPoint2();
 		}
 
 		return currentListCard;
+	}
+
+	private static void initIsChooseCard() {
+
+		existCard = new short[K];
+
+		for (short i = 0; i < K; i++) {
+			existCard[i] = i;
+		}
+	}
+
+	private static void initOriginalCard(List<Card> listCard) {
+
+		listOriginalCard = new ArrayList<>(listCard);
+
 	}
 
 	private static void initListCurrentCard(List<Card> listCard) {
 
 		currentListCard = new ArrayList<>();
 		int size = listCard.size();
-		
+
 		HashMap<Card, Boolean> map = null;
-		
+
 		for (int i = 0; i < size; i++) {
-			
+
 			map = new HashMap<>();
-			map.put(listCard.get(i), true);
-			
+			map.put(listCard.get(i), false);
+
 			currentListCard.add(map);
 		}
 
 	}
 
-	private static void findTheBuestPoint1() {
-		do {
+	private static void findTheBestPoint1() {
 
+		do {
 			short point = 0;
 			for (int i = 0; i < K; i++) {
 
 				int position = existCard[i];
-				point += currentListCard.get(position).getValue();
+				point += listOriginalCard.get(position).getValue();
 			}
 
+			// generate
+			nextCombination();
 		} while (!isFinish);
 
 	}
 
-	private static void findTheBuestPoint2() {
-		do {
+	private static void findTheBestPoint2() {
 
+		short max = -1;
+
+		do {
 			short point = 0;
+			Card card = null;
+			HashMap<Card, Boolean> map = null;
+			List<Card> tempList = new ArrayList<Card>();
+			
 			for (int i = 0; i < K; i++) {
 
 				int position = existCard[i];
-				point += currentListCard.get(position).getValue();
+				card = listOriginalCard.get(position);
+				
+				point += card.getValue();
+				tempList.add(card);
+			}
+			
+			if(mod10(point) && point > max){
+				
+				currentListCard.removeAll(currentListCard);
+				
+				for (Card c : tempList) {
+					map = new HashMap<Card, Boolean>();
+					map.put(c, true);
+					
+					currentListCard.add(map);
+				}
+				
+				tempList.removeAll(tempList);
 			}
 
+			// generate
+			nextCombination();
 		} while (!isFinish);
 
 	}
 
 	private static boolean checkDiamonds369() {
 
-		for (int i = 0; i < N; i++) {
+		int size = listOriginalCard.size();
 
-			if (currentListCard.get(i).getType().equals(TYPE.DIAMONDS)) {
+		for (int i = 0; i < N && size == N; i++) {
+
+			Card card = listOriginalCard.get(i);
+
+			if (card.getType().equals(TYPE.DIAMONDS) && null != card) {
 
 				if (card.getValue() == 3 || card.getValue() == 6 || card.getValue() == 9) {
 					return true;
@@ -119,15 +167,6 @@ public final class CaculateUtil {
 			isFinish = true;
 		}
 
-	}
-
-	private static void initExistCard() {
-
-		existCard = new short[K];
-
-		for (short i = 0; i < K; i++) {
-			existCard[i] = i;
-		}
 	}
 
 	private static boolean mod10(short point) {
