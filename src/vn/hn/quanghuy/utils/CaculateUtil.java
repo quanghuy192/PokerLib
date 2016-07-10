@@ -33,10 +33,8 @@ public final class CaculateUtil {
 		initListCurrentCard(listCard);
 
 		if (checkDiamonds369()) {
-
 			findTheBestPoint1();
 		} else {
-
 			findTheBestPoint2();
 		}
 
@@ -55,7 +53,6 @@ public final class CaculateUtil {
 	private static void initOriginalCard(List<Card> listCard) {
 
 		listOriginalCard = new ArrayList<>(listCard);
-
 	}
 
 	private static void initListCurrentCard(List<Card> listCard) {
@@ -100,27 +97,35 @@ public final class CaculateUtil {
 			Card card = null;
 			HashMap<Card, Boolean> map = null;
 			List<Card> tempList = new ArrayList<Card>();
-			
+			List<Card> existCardList = new ArrayList<Card>(listOriginalCard);
+
 			for (int i = 0; i < K; i++) {
 
 				int position = existCard[i];
 				card = listOriginalCard.get(position);
-				
 				point += card.getValue();
 				tempList.add(card);
+				
+				// remove card 
+				existCardList.remove(card);
 			}
 			
-			if(mod10(point) && point > max){
+			short tempOfMax = 0;
+			for (Card c : existCardList) {
 				
+				tempOfMax += c.getValue();
+			}
+
+			if (mod10(point) && remainerOf10(tempOfMax) > max) {
+
 				currentListCard.removeAll(currentListCard);
-				
+
 				for (Card c : tempList) {
 					map = new HashMap<Card, Boolean>();
 					map.put(c, true);
-					
 					currentListCard.add(map);
 				}
-				
+
 				tempList.removeAll(tempList);
 			}
 
@@ -135,9 +140,7 @@ public final class CaculateUtil {
 		int size = listOriginalCard.size();
 
 		for (int i = 0; i < N && size == N; i++) {
-
 			Card card = listOriginalCard.get(i);
-
 			if (card.getType().equals(TYPE.DIAMONDS) && null != card) {
 
 				if (card.getValue() == 3 || card.getValue() == 6 || card.getValue() == 9) {
@@ -156,14 +159,11 @@ public final class CaculateUtil {
 			i--;
 
 		if (i > 0) {
-
 			existCard[i] = (short) (existCard[i] + 1);
 			for (j = (short) (i + 1); j <= K; j++) {
-
 				existCard[j] = (short) (existCard[i] + j - i);
 			}
 		} else {
-
 			isFinish = true;
 		}
 
@@ -175,6 +175,11 @@ public final class CaculateUtil {
 			return true;
 		}
 		return false;
+	}
+
+	private static short remainerOf10(short value) {
+
+		return (short) (value % 10);
 	}
 
 }
