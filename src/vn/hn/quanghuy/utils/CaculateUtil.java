@@ -45,7 +45,7 @@ public final class CaculateUtil {
 
 		existCard = new short[K];
 
-		for (short i = 0; i < K; i++) {
+		for (short i = 1; i <= K; i++) {
 			existCard[i] = i;
 		}
 	}
@@ -125,6 +125,13 @@ public final class CaculateUtil {
 					map.put(c, true);
 					currentListCard.add(map);
 				}
+				
+				for (Card c : existCardList) {
+					map = new HashMap<Card, Boolean>();
+					map.put(c, false);
+					currentListCard.add(map);
+				}
+
 
 				tempList.removeAll(tempList);
 			}

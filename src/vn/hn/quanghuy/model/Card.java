@@ -1,12 +1,26 @@
 package vn.hn.quanghuy.model;
 
-import java.awt.Window.Type;
-
 public class Card {
 
 	private short value;
 	private boolean isChoose;
 	private TYPE type;
+	
+	public Card() {
+	}
+	
+	public Card(short value, TYPE type) {
+		super();
+		this.value = value;
+		this.type = type;
+	}
+
+	public Card(short value, boolean isChoose, TYPE type) {
+		super();
+		this.value = value;
+		this.isChoose = isChoose;
+		this.type = type;
+	}
 
 	public short getValue() {
 		return value;
