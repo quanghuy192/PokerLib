@@ -29,12 +29,16 @@ public final class CaculateUtil {
 	public static List<HashMap<Card, Boolean>> getListCardSum10(List<Card> listCard) {
 
 		initIsChooseCard();
+
 		initOriginalCard(listCard);
+
 		initListCurrentCard(listCard);
 
 		if (checkDiamonds369()) {
+
 			findTheBestPoint1();
 		} else {
+
 			findTheBestPoint2();
 		}
 
@@ -45,8 +49,8 @@ public final class CaculateUtil {
 
 		existCard = new short[K];
 
-		for (short i = 1; i <= K; i++) {
-			existCard[i] = i;
+		for (short i = 0; i < K; i++) {
+			existCard[i] = (short) (i + 1);
 		}
 	}
 
@@ -102,17 +106,17 @@ public final class CaculateUtil {
 			for (int i = 0; i < K; i++) {
 
 				int position = existCard[i];
-				card = listOriginalCard.get(position);
+				card = listOriginalCard.get(position - 1);
 				point += card.getValue();
 				tempList.add(card);
-				
-				// remove card 
+
+				// remove card
 				existCardList.remove(card);
 			}
-			
+
 			short tempOfMax = 0;
 			for (Card c : existCardList) {
-				
+
 				tempOfMax += c.getValue();
 			}
 
@@ -125,19 +129,24 @@ public final class CaculateUtil {
 					map.put(c, true);
 					currentListCard.add(map);
 				}
-				
+
 				for (Card c : existCardList) {
 					map = new HashMap<Card, Boolean>();
 					map.put(c, false);
 					currentListCard.add(map);
 				}
 
-
+				max = remainerOf10(tempOfMax);
 				tempList.removeAll(tempList);
 			}
 
-			// generate
-			nextCombination();
+			try {
+				// generate
+				nextCombination();
+			} catch (Exception e) {
+				// Finish Generate
+			}
+
 		} while (!isFinish);
 
 	}
@@ -162,18 +171,17 @@ public final class CaculateUtil {
 
 		short i, j;
 		i = K;
-		while (i > 0 && existCard[i] == N - K + i)
+		while (i >= 0 && existCard[i - 1] == N - K + i)
 			i--;
 
-		if (i > 0) {
-			existCard[i] = (short) (existCard[i] + 1);
-			for (j = (short) (i + 1); j <= K; j++) {
-				existCard[j] = (short) (existCard[i] + j - i);
+		if (i >= 0) {
+			existCard[i - 1] = (short) (existCard[i - 1] + 1);
+			for (j = (short) (i - 1 + 1); j < K; j++) {
+				existCard[j] = (short) (existCard[i - 1] + j - (i - 1));
 			}
 		} else {
 			isFinish = true;
 		}
-
 	}
 
 	private static boolean mod10(short point) {
@@ -186,7 +194,8 @@ public final class CaculateUtil {
 
 	private static short remainerOf10(short value) {
 
-		return (short) (value % 10);
+		return (value != 10) ? (short) (value % 10) : value;
+
 	}
 
 }
